@@ -1,17 +1,21 @@
 {
-    "short_name": "Radiohub",
-    "name": "Radiohub",
-    "description": "A free, easy-to-use, simple and minimal web template built with Shoelace, designed for creating a radio directory.",
-    "icons": [
-      {
-        "src": "assets/favicon.svg",
-        "type": "image/svg+xml",
-        "sizes": "any"
-      }
-    ],
-    "start_url": "https://digitalmalayali.github.io/Radiohub/",
-    "display": "standalone",
-    "theme_color": "#242428",
-    "background_color": "#242428"
-  }
-  
+  "name": "Liberty Radio",
+  "short_name": "Liberty",
+  "description": "Independent Radio Stream Directory",
+  "start_url": "https://www.liberty-express.org/libertyradio.html",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#00ff41",
+  "icons": [
+    {
+      "src": "https://cdn.cookielaw.org/logos/08874449-6e54-49cf-b3a0-337a24296f63/c221a8f2-522c-4c4c-bf8e-e060089b7e57/e82b07ce-b61b-4a89-ad6f-b2a5c348aec6/Blaze_Media_Logo_-_2023.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn.cookielaw.org/logos/08874449-6e54-49cf-b3a0-337a24296f63/c221a8f2-522c-4c4c-bf8e-e060089b7e57/e82b07ce-b61b-4a89-ad6f-b2a5c348aec6/Blaze_Media_Logo_-_2023.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

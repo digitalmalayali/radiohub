@@ -1,336 +1,103 @@
 <!DOCTYPE html>
 <html class="sl-theme-dark" lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="An open-source web template powered by Shoelace for creating a radio directory.">
-    <meta property="og:title" content="Radiohub - Open-source Radio Directory Template">
-    <meta name="og:description"
-        content="An open-source web template powered by Shoelace for creating a radio directory.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://digitalmalayali.github.io/radiohub">
-    <meta property="og:image" content="https://digitalmalayali.github.io/radiohub/assets/preview.webp">
-    <title>Radiohub - Open-source Radio Directory Template</title>
-    <link rel="shortcut icon" href="assets/favicon.svg" type="image/svg+xml">
+    <meta name="description" content="Independent radio stream directory featuring No Agenda, Infowars, and Blaze Media.">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net; img-src 'self' data: https://cdn.jsdelivr.net https://flagicons.lipis.dev https://cdn.cookielaw.org; media-src 'self' https://listen.noagendastream.com https://stream.alexjones.media https://15123.live.streamtheworld.com; connect-src 'self' data: https://cdn.jsdelivr.net https://listen.noagendastream.com https://stream.alexjones.media https://15123.live.streamtheworld.com;">
+    <title>Liberty Radio</title>
+    <link rel="icon" href="https://cdn.cookielaw.org/logos/08874449-6e54-49cf-b3a0-337a24296f63/c221a8f2-522c-4c4c-bf8e-e060089b7e57/e82b07ce-b61b-4a89-ad6f-b2a5c348aec6/Blaze_Media_Logo_-_2023.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/themes/dark.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
     <link rel="stylesheet" href="style.css">
-    <script type="module"
-        src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/shoelace-autoloader.js"></script>
     <link rel="manifest" href="manifest.json">
 </head>
-
 <body>
-    <header>
-        <nav>
-            <sl-button class="logo" variant="text" size="large" href="/radiohub">
-                <sl-icon slot="prefix" name="broadcast-pin" style="font-size: 2rem;"></sl-icon>
-                Radiohub
-            </sl-button>
-            <sl-icon-button name="github" label="GitHub" style="font-size: 1.2rem;"
-                href="https://github.com/digitalmalayali/radiohub" target="_blank"></sl-icon-button>
-        </nav>
+    <header class="now-playing">
+        <div class="clock" id="current-time">00:00:00</div>
+        <div class="status">Now Playing: <span id="now-playing-title" class="glow">None</span></div>
     </header>
 
-    <main>
-
-        <sl-card>
-            <div class="card-container">
-                <div class="logo-container">
-                    <img class="radio-logo" src="assets/RDM.webp" alt="Radio Digital Malayali Logo" />
-                    <sl-button class="play-radio" variant="primary">
-                        <sl-icon slot="prefix" name="play-circle-fill"></sl-icon>
-                        Play
+    <main id="radio-grid">
+        <sl-card class="radio-card">
+            <img slot="image" src="assets/No_Agenda_cover_placeholder.jpg" alt="No Agenda" class="radio-logo">
+            <div class="card-content">
+                <strong class="glow">No Agenda Live</strong>
+                <div class="controls">
+                    <sl-button class="play-radio" variant="primary" size="small" data-title="No Agenda Live">
+                        <sl-icon slot="prefix" name="play-circle-fill"></sl-icon> Play
+                    </sl-button>
+                    <sl-button class="stop-radio" variant="danger" size="small">
+                        <sl-icon slot="prefix" name="stop-fill"></sl-icon> Stop
                     </sl-button>
                 </div>
-                <div class="info">
-                    <div class="header">
-                        <strong>Radio Digital Malayali</strong>
-                        <sl-icon-button name="arrow-up-right" label="Visit Website"
-                            href="https://radio.digitalmalayali.in/" target="_blank"></sl-icon-button>
-                    </div>
-                    A 24/7 Indian lo-fi music web radio initiative by Digital Malayali.
-                    <div class="badges">
-                        <sl-badge variant="success">India<span class="fi fi-in fis"></span></sl-badge>
-                        <sl-badge variant="success">Malayalam</sl-badge>
-                        <sl-badge variant="success">Music</sl-badge>
-                    </div>
-                    <div class="footer">
-                        <audio class="audio" src="https://radio.digitalmalayali.in/listen/stream/radio.mp3"
-                            preload="none"></audio>
-                        <sl-range class="volume-control" min="0" max="100" value="20" aria-label="volume-control"
-                            style="display:none;"></sl-range>
-                    </div>
+                <div class="audio-engine">
+                    <audio class="audio" src="https://listen.noagendastream.com/noagenda?type=.mp3" crossorigin="anonymous"></audio>
+                    <canvas class="visualizer"></canvas>
+                    <sl-range class="volume-control" min="0" max="100" value="50"></sl-range>
                 </div>
             </div>
         </sl-card>
 
-        <sl-card>
-            <div class="card-container">
-                <div class="logo-container">
-                    <img class="radio-logo" src="assets/tvm.jpg" alt="Akashvani TVM Logo" />
-                    <sl-button class="play-radio" variant="primary">
-                        <sl-icon slot="prefix" name="play-circle-fill"></sl-icon>
-                        Play
+        <sl-card class="radio-card">
+            <img slot="image" src="assets/INFOWARS 1.jpg" alt="Infowars" class="radio-logo">
+            <div class="card-content">
+                <sl-select class="stream-selector" value="https://stream.alexjones.media/alexjonesshow.mp3" size="small">
+                    <sl-option value="https://stream.alexjones.media/alexjonesshow.mp3">Alex Jones Show</sl-option>
+                    <sl-option value="https://stream.alexjones.media/warroom/">War Room</sl-option>
+                </sl-select>
+                <div class="controls">
+                    <sl-button class="play-radio" variant="primary" size="small" data-title="Infowars Network">
+                        <sl-icon slot="prefix" name="play-circle-fill"></sl-icon> Play
+                    </sl-button>
+                    <sl-button class="stop-radio" variant="danger" size="small">
+                        <sl-icon slot="prefix" name="stop-fill"></sl-icon> Stop
                     </sl-button>
                 </div>
-                <div class="info">
-                    <div class="header">
-                        <strong>Akashvani TVM</strong>
-                        <sl-icon-button name="arrow-up-right" label="Visit Website"
-                            href="https://prasarbharati.gov.in/airtvm/" target="_blank"></sl-icon-button>
-                    </div>
-                    AIR TVM, started serving the people of Kerala and now stand as the leading electronic media in the state.
-                    <div class="badges">
-                        <sl-badge variant="success">India<span class="fi fi-in fis"></span></sl-badge>
-                        <sl-badge variant="success">Malayalam</sl-badge>
-                        <sl-badge variant="success">Public</sl-badge>
-                    </div>
-                    <div class="footer">
-                        <audio class="audio" src="https://air.pc.cdn.bitgravity.com/air/live/pbaudio230/playlist.m3u8"
-                            preload="none"></audio>
-                        <sl-range class="volume-control" min="0" max="100" value="20" aria-label="volume-control"
-                            style="display:none;"></sl-range>
-                    </div>
+                <div class="audio-engine">
+                    <audio class="audio" src="https://stream.alexjones.media/alexjonesshow.mp3" crossorigin="anonymous"></audio>
+                    <canvas class="visualizer"></canvas>
+                    <sl-range class="volume-control" min="0" max="100" value="50"></sl-range>
                 </div>
             </div>
         </sl-card>
 
-
-        <sl-card>
-            <div class="card-container">
-                <div class="logo-container">
-                    <img class="radio-logo" src="assets/mixify.webp" alt="Mixify Logo" />
-                    <sl-button class="play-radio" variant="primary">
-                        <sl-icon slot="prefix" name="play-circle-fill"></sl-icon>
-                        Play
+        <sl-card class="radio-card">
+            <img slot="image" src="https://cdn.cookielaw.org/logos/08874449-6e54-49cf-b3a0-337a24296f63/c221a8f2-522c-4c4c-bf8e-e060089b7e57/e82b07ce-b61b-4a89-ad6f-b2a5c348aec6/Blaze_Media_Logo_-_2023.png" alt="Blaze Media" class="radio-logo blaze-logo">
+            <div class="card-content">
+                <strong class="glow">Blaze Media</strong>
+                <div class="controls">
+                    <sl-button class="play-radio" variant="primary" size="small" data-title="Blaze Media">
+                        <sl-icon slot="prefix" name="play-circle-fill"></sl-icon> Play
+                    </sl-button>
+                    <sl-button class="stop-radio" variant="danger" size="small">
+                        <sl-icon slot="prefix" name="stop-fill"></sl-icon> Stop
                     </sl-button>
                 </div>
-                <div class="info">
-                    <div class="header">
-                        <strong>Mixify Radio</strong>
-                        <sl-icon-button name="arrow-up-right" label="Visit Website" href="https://mixify.in/"
-                            target="_blank"></sl-icon-button>
-                    </div>
-                    Eternal sanctuary for the soulful tunes of Hindi music.
-                    <div class="badges">
-                        <sl-badge variant="success">India<span class="fi fi-in fis"></span></sl-badge>
-                        <sl-badge variant="success">Hindi</sl-badge>
-                        <sl-badge variant="success">Music</sl-badge>
-                    </div>
-                    <div class="footer">
-                        <audio class="audio" src="https://server.mixify.in/listen/listen//radio.mp3"
-                            preload="none"></audio>
-                        <sl-range class="volume-control" min="0" max="100" value="20" aria-label="volume-control"
-                            style="display:none;"></sl-range>
-                    </div>
+                <div class="audio-engine">
+                    <audio class="audio" src="https://15123.live.streamtheworld.com/BLZE_1AAC_SC?pname=live_profile&companionAds=false&dist=iheart&terminalId=159&deviceName=web-mobile&aw_0_1st.playerid=iHeartRadioWebPlayer&listenerId=&clientType=web&profileId=12489876887&aw_0_1st.skey=12489876887&host=webapp.US&playedFrom=157&stationid=4874&territory=US" crossorigin="anonymous"></audio>
+                    <canvas class="visualizer"></canvas>
+                    <sl-range class="volume-control" min="0" max="100" value="50"></sl-range>
                 </div>
             </div>
         </sl-card>
-
-        <sl-card>
-            <div class="card-container">
-                <div class="logo-container">
-                    <img class="radio-logo" src="assets/AM1050.webp" alt="AM 1050 Logo" />
-                    <sl-button class="play-radio" variant="primary">
-                        <sl-icon slot="prefix" name="play-circle-fill"></sl-icon>
-                        Play
-                    </sl-button>
-                </div>
-                <div class="info">
-                    <div class="header">
-                        <strong>AM 1050</strong>
-                        <sl-icon-button name="arrow-up-right" label="Visit Website"
-                            href="https://www.lavozdesanjusto.com.ar/AM1050" target="_blank"></sl-icon-button>
-                    </div>
-                    An AM radio station from Cordoba, Argentina.
-                    <div class="badges">
-                        <sl-badge variant="success">Argentina<span class="fi fi-ar fis"></span></sl-badge>
-                        <sl-badge variant="success">Spanish</sl-badge>
-                        <sl-badge variant="success">News</sl-badge>
-                    </div>
-                    <div class="footer">
-                        <audio class="audio"
-                            src="https://vps-2333016-x.dattaweb.com/listen/am_1050_radio_san_francisco/radio.mp3"
-                            preload="none"></audio>
-                        <sl-range class="volume-control" min="0" max="100" value="20" aria-label="volume-control"
-                            style="display:none;"></sl-range>
-                    </div>
-                </div>
-            </div>
-        </sl-card>
-
-        <sl-card>
-            <div class="card-container">
-                <div class="logo-container">
-                    <img class="radio-logo" src="assets/fmuniverso957.webp" alt="FM Universo 957 Logo" />
-                    <sl-button class="play-radio" variant="primary">
-                        <sl-icon slot="prefix" name="play-circle-fill"></sl-icon>
-                        Play
-                    </sl-button>
-                </div>
-                <div class="info">
-                    <div class="header">
-                        <strong>FM Universo 957</strong>
-                        <sl-icon-button name="arrow-up-right" label="Visit Website"
-                            href="https://www.lavozdesanjusto.com.ar/FMUniverso" target="_blank"></sl-icon-button>
-                    </div>
-                    #24hsSoloMusica, without pauses, without cuts, without breaks.
-                    <div class="badges">
-                        <sl-badge variant="success">Argentina<span class="fi fi-ar fis"></span></sl-badge>
-                        <sl-badge variant="success">Spanish</sl-badge>
-                        <sl-badge variant="success">Music</sl-badge>
-                    </div>
-                    <div class="footer">
-                        <audio class="audio" src="https://vps-2333016-x.dattaweb.com/listen/fm_universo_957/radio.mp3"
-                            preload="none"></audio>
-                        <sl-range class="volume-control" min="0" max="100" value="20" aria-label="volume-control"
-                            style="display:none;"></sl-range>
-                    </div>
-                </div>
-            </div>
-        </sl-card>
-
-        <sl-card>
-            <div class="card-container">
-                <div class="logo-container">
-                    <img class="radio-logo" src="assets/2GHR.webp" alt="2GHR Logo" />
-                    <sl-button class="play-radio" variant="primary">
-                        <sl-icon slot="prefix" name="play-circle-fill"></sl-icon>
-                        Play
-                    </sl-button>
-                </div>
-                <div class="info">
-                    <div class="header">
-                        <strong>96.7 2GHR FM</strong>
-                        <sl-icon-button name="arrow-up-right" label="Visit Website" href="https://2ghr.org.au/"
-                            target="_blank"></sl-icon-button>
-                    </div>
-                    Greater Hume Shire's very own community radio station.
-                    <div class="badges">
-                        <sl-badge variant="success">Australia<span class="fi fi-au fis"></span></sl-badge>
-                        <sl-badge variant="success">English</sl-badge>
-                        <sl-badge variant="success">Music</sl-badge>
-                    </div>
-                    <div class="footer">
-                        <audio class="audio" src="https://az1.syd2.hostyourservices.au/listen/2ghr/2ghr"
-                            preload="none"></audio>
-                        <sl-range class="volume-control" min="0" max="100" value="20" aria-label="volume-control"
-                            style="display:none;"></sl-range>
-                    </div>
-                </div>
-            </div>
-        </sl-card>
-
-        <sl-card>
-            <div class="card-container">
-                <div class="logo-container">
-                    <img class="radio-logo" src="assets/topactiva.webp" alt="Top Activa Logo" />
-                    <sl-button class="play-radio" variant="primary">
-                        <sl-icon slot="prefix" name="play-circle-fill"></sl-icon>
-                        Play
-                    </sl-button>
-                </div>
-                <div class="info">
-                    <div class="header">
-                        <strong>Radio Top Activa 99.5 FM</strong>
-                        <sl-icon-button name="arrow-up-right" label="Visit Website"
-                            href="https://radiotopactiva.blogspot.com/" target="_blank"></sl-icon-button>
-                    </div>
-                    Radio Top Activa broadcasts on 99.5 FM from Challapata, Bolivia.
-                    <div class="badges">
-                        <sl-badge variant="success">Bolivia<span class="fi fi-bo fis"></span></sl-badge>
-                        <sl-badge variant="success">Spanish</sl-badge>
-                        <sl-badge variant="success">Music</sl-badge>
-                    </div>
-                    <div class="footer">
-                        <audio class="audio" src="https://autodj.live/listen/radio_top_activa/live"
-                            preload="none"></audio>
-                        <sl-range class="volume-control" min="0" max="100" value="20" aria-label="volume-control"
-                            style="display:none;"></sl-range>
-                    </div>
-                </div>
-            </div>
-        </sl-card>
-
-        <sl-card>
-            <div class="card-container">
-                <div class="logo-container">
-                    <img class="radio-logo" src="assets/radiomocambos.webp" alt="Radio Mocambos Logo" />
-                    <sl-button class="play-radio" variant="primary">
-                        <sl-icon slot="prefix" name="play-circle-fill"></sl-icon>
-                        Play
-                    </sl-button>
-                </div>
-                <div class="info">
-                    <div class="header">
-                        <strong>Radio Mocambos</strong>
-                        <sl-icon-button name="arrow-up-right" label="Visit Website" href="https://taina.net.br/"
-                            target="_blank"></sl-icon-button>
-                    </div>
-                    Casa de Cultura Tainã is a non-profit cultural and social entity.
-                    <div class="badges">
-                        <sl-badge variant="success">Brazil<span class="fi fi-br fis"></span></sl-badge>
-                        <sl-badge variant="success">Portuguese</sl-badge>
-                        <sl-badge variant="success">Music</sl-badge>
-                    </div>
-                    <div class="footer">
-                        <audio class="audio" src="https://labradio.taina.net.br/listen/radiomocambos/radio.mp3"
-                            preload="none"></audio>
-                        <sl-range class="volume-control" min="0" max="100" value="20" aria-label="volume-control"
-                            style="display:none;"></sl-range>
-                    </div>
-                </div>
-            </div>
-        </sl-card>
-
-        <sl-card>
-            <div class="card-container">
-                <div class="logo-container">
-                    <img class="radio-logo" src="assets/RadioMilRecuerdos.webp" alt="Radio Mil Recuerdos Logo" />
-                    <sl-button class="play-radio" variant="primary">
-                        <sl-icon slot="prefix" name="play-circle-fill"></sl-icon>
-                        Play
-                    </sl-button>
-                </div>
-                <div class="info">
-                    <div class="header">
-                        <strong>Radio Mil Recuerdos</strong>
-                        <sl-icon-button name="arrow-up-right" label="Visit Website"
-                            href="https://www.radiomilrecuerdos.net/" target="_blank"></sl-icon-button>
-                    </div>
-                    Memories that live through time in Guayaquil.
-                    <div class="badges">
-                        <sl-badge variant="success">Ecuador<span class="fi fi-ec fis"></span></sl-badge>
-                        <sl-badge variant="success">Spanish</sl-badge>
-                        <sl-badge variant="success">Music</sl-badge>
-                    </div>
-                    <div class="footer">
-                        <audio class="audio" src="https://autodj.live/listen/milrecuerdos/radio.mp3"
-                            preload="none"></audio>
-                        <sl-range class="volume-control" min="0" max="100" value="20" aria-label="volume-control"
-                            style="display:none;"></sl-range>
-                    </div>
-                </div>
-            </div>
-        </sl-card>
-
     </main>
 
-    <footer>
-        <small>This website is <a href="https://github.com/digitalmalayali/radiohub" target="_blank">open-source</a>.
-            Code is licensed under <a href="https://github.com/digitalmalayali/radiohub/blob/main/LICENSE"
-                target="_blank">MIT</a>.</small>
-        <p>© 2024 <a href="https://links.digitalmalayali.in/" target="_blank">Digital Malayali</a></p>
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="script.js" async></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/shoelace.js"></script>
+    <script src="script.js"></script>
     <script>
-        if ("serviceWorker" in navigator) {
-          navigator.serviceWorker.register("sw.js");
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js', { scope: '/' });
         }
-      </script>
-</body>
+    </script>
 
+    <nav aria-label="Footer" style="font-size:14px; margin-top: 1rem;">
+        <ul style="list-style:none;margin:0;padding:0;display:flex;gap:12px;flex-wrap:wrap;">
+            <li><a href="/about.html" style="color:inherit;text-decoration:none;">About</a></li>
+            <li><a href="/contact.html" style="color:inherit;text-decoration:none;">Contact</a></li>
+            <li><a href="https://www.liberty-express.org/blaze-media.html" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Blaze Media</a></li>
+            <li><a href="/privacy.html" style="color:inherit;text-decoration:none;">Privacy</a></li>
+        </ul>
+    </nav>
+</body>
 </html>

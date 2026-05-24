@@ -1,1 +1,86 @@
-const buttons=document.getElementsByClassName("play-radio"),audios=document.getElementsByClassName("audio"),volumeControls=document.getElementsByClassName("volume-control");function pauseAllExcept(e){for(let t of audios)if(t!==e){t.pause();const e=Array.from(audios).indexOf(t);buttons[e].disabled||(buttons[e].innerHTML='<sl-icon id="icon" slot="prefix" name="play-circle-fill"></sl-icon> Play',buttons[e].setAttribute("variant","primary"),volumeControls[e].style.display="none")}}for(let e=0;e<buttons.length;e++){const t=buttons[e],l=audios[e],n=volumeControls[e],o=l.getAttribute("src");let s=null;t.addEventListener("click",(()=>{l.paused?(t.innerHTML='<sl-spinner style="--indicator-color: var(--sl-color-neutral-0); --track-color: var(--sl-color-neutral-300);"></sl-spinner>',pauseAllExcept(l),o.endsWith(".m3u8")?Hls.isSupported()&&!s?(s=new Hls,s.loadSource(o),s.attachMedia(l)):l.canPlayType("application/vnd.apple.mpegurl")&&l.src!==o&&(l.src=o):l.src!==o&&(l.src=o),l.play().then((()=>{t.innerHTML='<sl-icon id="icon" slot="prefix" name="stop-circle-fill"></sl-icon> Stop',t.setAttribute("variant","danger"),n.style.display="inline-block",l.volume=n.value/100})).catch((()=>{disableButton(t)})),n.addEventListener("input",(function(){l.volume=n.value/100}))):(l.pause(),t.innerHTML='<sl-icon id="icon" slot="prefix" name="play-circle-fill"></sl-icon> Play',t.setAttribute("variant","primary"),n.style.display="none")})),l.onerror=function(){disableButton(t)}}function disableButton(e){e.innerHTML='<sl-icon slot="prefix" name="slash-circle"></sl-icon> Inactive',e.setAttribute("variant","default"),e.disabled=!0}
+document.addEventListener('DOMContentLoaded', () => {
+    let audioContext, analyser, dataArray, animationId;
+    const sourceNodes = new Map();
+
+    const initContext = () => {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 128;
+            analyser.connect(audioContext.destination);
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+        }
+    };
+
+    const stopAll = () => {
+        cancelAnimationFrame(animationId);
+        document.querySelectorAll('.audio').forEach(a => { a.pause(); a.currentTime = 0; });
+        document.querySelectorAll('.play-radio').forEach(b => {
+            b.variant = 'primary';
+            b.innerHTML = '<sl-icon slot="prefix" name="play-circle-fill"></sl-icon> Play';
+        });
+    };
+
+    const draw = (canvas) => {
+        animationId = requestAnimationFrame(() => draw(canvas));
+        analyser.getByteFrequencyData(dataArray);
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const barWidth = (canvas.width / dataArray.length) * 2;
+        let x = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+            const h = dataArray[i] / 4;
+            ctx.fillStyle = '#00ff41';
+            ctx.fillRect(x, canvas.height - h, barWidth, h);
+            x += barWidth + 2;
+        }
+    };
+
+    document.body.addEventListener('click', async (e) => {
+        const playBtn = e.target.closest('.play-radio');
+        const stopBtn = e.target.closest('.stop-radio');
+
+        if (playBtn) {
+            const card = playBtn.closest('sl-card');
+            const audio = card.querySelector('.audio');
+            initContext();
+            if (audioContext.state === 'suspended') await audioContext.resume();
+
+            if (audio.paused) {
+                stopAll();
+                if (!sourceNodes.has(audio)) {
+                    sourceNodes.set(audio, audioContext.createMediaElementSource(audio));
+                    sourceNodes.get(audio).connect(analyser);
+                }
+                audio.play();
+                playBtn.variant = 'warning';
+                playBtn.innerHTML = '<sl-icon slot="prefix" name="pause-circle-fill"></sl-icon> Pause';
+                document.getElementById('now-playing-title').textContent = playBtn.dataset.title;
+                draw(card.querySelector('.visualizer'));
+            } else {
+                audio.pause();
+                playBtn.variant = 'primary';
+                playBtn.innerHTML = '<sl-icon slot="prefix" name="play-circle-fill"></sl-icon> Play';
+            }
+        }
+        if (stopBtn) { stopAll(); document.getElementById('now-playing-title').textContent = "None"; }
+    });
+
+    document.addEventListener('sl-input', (e) => {
+        if (e.target.classList.contains('volume-control')) {
+            e.target.closest('sl-card').querySelector('.audio').volume = e.target.value / 100;
+        }
+    });
+
+    document.addEventListener('sl-change', (e) => {
+        if (e.target.classList.contains('stream-selector')) {
+            const audio = e.target.closest('sl-card').querySelector('.audio');
+            audio.src = e.target.value;
+            stopAll();
+        }
+    });
+
+    setInterval(() => {
+        document.getElementById('current-time').textContent = new Date().toTimeString().split(' ')[0];
+    }, 1000);
+});
